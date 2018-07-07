@@ -1,0 +1,10 @@
+{
+  "name": "databases",
+  "description": "Learn about databases",
+  "main": "",
+  "authors": [
+    "Hack Reactor <curriculum.team@hackreactor.com>"
+  ],
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/enjik/hrsf98-databases"
+}
