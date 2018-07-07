@@ -1,44 +1,41 @@
 var db = require('../db');
-//connection
- 
+
 module.exports = {
+
   messages: {
     get: function (callback) {
-
-      db.connection.query('SELECT * FROM messages', function (err, result) {
-        if (err) { throw err; }
-        callback(result);
-      });
- 
-      //db.end();
-    }, // a function which produces all the messages
-    post: function (params, callback) {
-      var stringQuery = 'INSERT INTO messages (text, userid, roomname) \
-      VALUES (? , SELECT id FROM users where username=?, ?)';
-      db.connection.query(stringQuery, params, function(err, results) {
-        if (err) { throw err; }
-        callback(results);
-      });
-    }
-
-  },
-
-  users: {
-    get: function(callback) {
-      db.connection.query ('SELECT * FROM users', function (err, result) {
-        if (err) { throw err; }
-        callback(result);
+      // fetch all messages
+      // text, username, roomname, id
+      var queryStr = 'select messages.id, messages.text, messages.roomname, users.username \
+                      from messages left outer join users on (messages.userid = users.id) \
+                      order by messages.id desc';
+      db.query(queryStr, function(err, results) {
+        callback(err, results);
       });
     },
-
-
-    post: function(params, callback) {
-      var stringQuery = 'INSERT INTO users (username) VALUES (?)';
-      db.connection.query(stringQuery, params, function(err, result) {
-        if (err) { throw err; }
-        callback(result);
+    post: function (params, callback) {
+      // create a message for a user id based on the given username
+      var queryStr = 'insert into messages(text, userid, roomname) \
+                      value (?, (select id from users where username = ? limit 1), ?)';
+      db.query(queryStr, params, function(err, results) {
+        callback(err, results);
       });
     }
-
+  },
+  users: {
+    get: function (callback) {
+      // fetch all users
+      var queryStr = 'select * from users';
+      db.query(queryStr, function(err, results) {
+        callback(err, results);
+      });
+    },
+    post: function (params, callback) {
+      // create a user
+      var queryStr = 'insert into users(username) values (?)';
+      db.query(queryStr, params, function(err, results) {
+        callback(err, results);
+      });
+    }
   }
 };
