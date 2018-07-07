@@ -1,30 +1,34 @@
 var models = require('../models');
 var utils = require('./utils');
-//models.get
-//models.post 
-var objectIdCounter = 1; 
+
 
 module.exports = {
   messages: {
     get: function (req, res) {
-      var messagesFromSql = models.messages.get(); 
-      utils.sendResponse(res, JSON.parse(messagesFromSql), 200); 
-    }, // a function which handles a get request for all messages
-    post: function (req, res) {
-      utils.collectData(req, (message) => {
-        message.objectId = ++objectIdCounter; 
-        models.messages.post(message); 
-        utils.sendResponse(res, message, 201);
+      models.messages.get(function(data){
+        res.json(data);
       }); 
-    // callback function is required given node's asynchronous nature
-    // a function which handles posting a message to the database
+       
     },
-  },
+
+    post: function (req, res) {
+      var params = [req.body.message, req.body.username, req.body.roomname];
+      models.messages.post(params, function(err, results){
+        res.sendStatus(201);
+      });
+    },
 
   users: {
-    // Ditto as above
-    get: function (req, res) {},
-    post: function (req, res) {}
+    get: function (req, res) {
+      models.users.get(function(data){
+        res.json(data)
+      })
+    },
+    post: function (req, res) {
+      var params = [req.body.username];
+      models.users.post(params, function(err, results){
+        res.sendStatus(201);
+      })
+    }
   }
 };
-

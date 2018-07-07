@@ -3,32 +3,42 @@ var db = require('../db');
  
 module.exports = {
   messages: {
-    get: function () {
-      console.log('REACHED GET!');
-      var query = db.query('SELECT messages');
-      query.on('fields', function(fields) {
-        console.log(fields);
+    get: function (callback) {
+
+      db.connection.query('SELECT * FROM messages', function (err, result) {
+        if (err) { throw err; }
+        callback(result);
       });
  
-      query.on('result', function(row) {
-        console.log(row.post_title);
-      });
- 
-      db.end();
+      //db.end();
     }, // a function which produces all the messages
-     post: function (message) {
-    //   var sql = `INSERT INTO messages (text, objectID, createdAt, updatedAt, id_room, id_user) VALUES (${data.text}, ${data.objectId}, ${}, ${}, ${};
-    //   console.log('POST!');
-      
-  //   } // a function which can be used to insert a message into the database
+    post: function (params, callback) {
+      var stringQuery = 'INSERT INTO messages (text, userid, roomname) \
+      VALUES (? , SELECT id FROM users where username=?)';
+      db.connection.query(stringQuery, params, function(err, results) {
+        if (err) { throw err; }
+        callback(results);
+      });
+    }
+
+  },
+
+  users: {
+    get: function(callback) {
+      db.connection.query ('SELECT * FROM users', function (err, result) {
+        if (err) { throw err; }
+        callback(result);
+      });
     },
 
-//   users: {
-//     // Ditto as above.
-//     get: function () {
-//     },
-//     post: function () {
-//     }
-//   }
+
+    post: function(params, callback) {
+      var stringQuery = 'INSERT INTO users (username) VALUES (?)';
+      db.connection.query(stringQuery, params, function(err, result) {
+        if (err) { throw err; }
+        callback(result);
+      });
+    }
+
   }
-}
+};
