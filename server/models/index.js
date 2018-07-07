@@ -14,7 +14,7 @@ module.exports = {
     }, // a function which produces all the messages
     post: function (params, callback) {
       var stringQuery = 'INSERT INTO messages (text, userid, roomname) \
-      VALUES (? , SELECT id FROM users where username=?)';
+      VALUES (? , SELECT id FROM users where username=?, ?)';
       db.connection.query(stringQuery, params, function(err, results) {
         if (err) { throw err; }
         callback(results);

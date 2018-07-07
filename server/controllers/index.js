@@ -1,5 +1,4 @@
 var models = require('../models');
-var utils = require('./utils');
 
 
 module.exports = {
@@ -17,6 +16,7 @@ module.exports = {
         res.sendStatus(201);
       });
     },
+  },
 
   users: {
     get: function (req, res) {
@@ -32,6 +32,5 @@ module.exports = {
       });
     },
   }
-},
-
 };
+
