@@ -5,7 +5,7 @@ var utils = require('./utils');
 module.exports = {
   messages: {
     get: function (req, res) {
-      models.messages.get(function(data){
+      models.messages.get(function(data) {
         res.json(data);
       }); 
        
@@ -13,22 +13,25 @@ module.exports = {
 
     post: function (req, res) {
       var params = [req.body.message, req.body.username, req.body.roomname];
-      models.messages.post(params, function(err, results){
+      models.messages.post(params, function(err, results) {
         res.sendStatus(201);
       });
     },
 
   users: {
     get: function (req, res) {
-      models.users.get(function(data){
-        res.json(data)
-      })
+      models.users.get(function(data) {
+        res.json(data);
+      });
     },
+
     post: function (req, res) {
       var params = [req.body.username];
-      models.users.post(params, function(err, results){
+      models.users.post(params, function(err, results) {
         res.sendStatus(201);
-      })
-    }
+      });
+    },
   }
+},
+
 };
